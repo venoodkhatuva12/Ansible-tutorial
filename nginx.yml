@@ -1,0 +1,44 @@
+---
+
+ - hosts: db
+   vars:
+      site_name: "ansibletutorial"
+      site_title: "Lets Create Sandeep Good."
+      site_url: "www.sandeep.com"
+
+   tasks:
+      - name: Install Nginx
+        package: name=nginx state=latest
+
+      - name: Create WebBlog Directory
+        file: path="/var/www/{{ site_name }}" state=directory mode=0755
+
+      - name: Create Nginx Config File
+        template:
+           src: "templates/nginx.conf"
+           dest: "/etc/nginx/nginx.conf"
+        notify:
+        - restart nginx
+
+      - name: Create Nginx VHost
+        template:
+          src: "templates/ansi_vhost.conf"
+          dest: "/etc/nginx/conf.d/{{ site_name }}.conf"
+        notify:
+        - restart nginx
+
+      - name: Create WebBlog
+        template:
+          src: "templates/index.html"
+          dest: "/var/www/{{ site_name }}/index.html"
+
+      - name:  Remove old nginx config file
+        file: path=/etc/nginx/site-enabled/default state=absent
+        notify:
+        - restart nginx
+
+   handlers:
+      - name: restart nginx
+        service:
+          name: nginx
+          state: restarted
