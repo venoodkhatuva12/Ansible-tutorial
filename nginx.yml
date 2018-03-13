@@ -1,6 +1,6 @@
 ---
 
- - hosts: db
+ - hosts: web2
    vars:
       site_name: "ansibletutorial"
       site_title: "Lets Create Sandeep Good."

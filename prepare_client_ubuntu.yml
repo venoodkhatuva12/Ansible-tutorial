@@ -15,6 +15,9 @@
                        exclusive=no
                        key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 
+     - name: Lets Allow Root
+       raw: sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config && sudo systemctl restart sshd.service
+
        #- name: Create /root/.ssh
        #  file: path=/root/.ssh state=directory mode=0700
 
